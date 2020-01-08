@@ -231,7 +231,7 @@ func resourceArmLinuxVirtualMachineScaleSet() *schema.Resource {
 				ValidateFunc: azure.ValidateResourceID,
 			},
 
-			"source_image_reference": VirtualMachineScaleSetSourceImageReferenceSchema(),
+			"source_image_reference": SourceImageReferenceSchema(),
 
 			"tags": tags.Schema(),
 
@@ -324,7 +324,7 @@ func resourceArmLinuxVirtualMachineScaleSetCreate(d *schema.ResourceData, meta i
 
 	sourceImageReferenceRaw := d.Get("source_image_reference").([]interface{})
 	sourceImageId := d.Get("source_image_id").(string)
-	sourceImageReference, err := ExpandVirtualMachineScaleSetSourceImageReference(sourceImageReferenceRaw, sourceImageId)
+	sourceImageReference, err := ExpandSourceImageReference(sourceImageReferenceRaw, sourceImageId)
 	if err != nil {
 		return err
 	}
@@ -629,7 +629,7 @@ func resourceArmLinuxVirtualMachineScaleSetUpdate(d *schema.ResourceData, meta i
 		if d.HasChange("source_image_id") || d.HasChange("source_image_reference") {
 			sourceImageReferenceRaw := d.Get("source_image_reference").([]interface{})
 			sourceImageId := d.Get("source_image_id").(string)
-			sourceImageReference, err := ExpandVirtualMachineScaleSetSourceImageReference(sourceImageReferenceRaw, sourceImageId)
+			sourceImageReference, err := ExpandSourceImageReference(sourceImageReferenceRaw, sourceImageId)
 			if err != nil {
 				return err
 			}
@@ -873,7 +873,7 @@ func resourceArmLinuxVirtualMachineScaleSetRead(d *schema.ResourceData, meta int
 				return fmt.Errorf("Error setting `data_disk`: %+v", err)
 			}
 
-			if err := d.Set("source_image_reference", FlattenVirtualMachineScaleSetSourceImageReference(storageProfile.ImageReference)); err != nil {
+			if err := d.Set("source_image_reference", FlattenSourceImageReference(storageProfile.ImageReference)); err != nil {
 				return fmt.Errorf("Error setting `source_image_reference`: %+v", err)
 			}
 
